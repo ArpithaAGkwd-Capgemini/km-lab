@@ -1,0 +1,53 @@
+<section class="landing-section-css">
+  <!-- Section for content -->
+  <div class="container-fluid main-content-container">
+    <h2 class="title-css">Recent Documents</h2>
+    <div class="row">
+      <div class="input-group mb-3 w-25">
+        <input type="text" class="form-control" placeholder="Search for a document here..." (input)="filterDocument()"
+          aria-label="Recipient's username" aria-describedby="basic-addon2" id="documentSearch" name="documentSearch"
+          [(ngModel)]="documentSearch">
+        <span class="input-group-text" id="basic-addon2"><i class="bi bi-funnel"></i></span>
+      </div>
+      <div class="col-sm-12">
+        <table class="table table-striped">
+          <thead>
+            <tr>
+              <th scope="col">Name</th>
+              <th scope="col">Date</th>
+              <th scope="col">Author / Owner</th>
+              <th scope="col" class="align-icon">Document Download <br> Curated | Original</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr *ngFor="let data of paginatedDocuments">
+              <td>{{ data.Name }}</td>
+              <td>{{ data.Date }}</td>
+              <td>{{ data.Author }}</td>
+              <td class="d-flex justify-content-center gap-5">
+                <a [href]="data.UrlCurated" target="_blank">
+                <i class="bi bi-download"></i>
+              </a>
+              <a [href]="data.UrlOriginal" target="_blank">
+                <i class="bi bi-download"></i>
+              </a>
+              </td>
+
+            </tr>
+          </tbody>
+        </table>
+
+        <!-- Pagination Controls -->
+        <div class="pagination-controls">
+          <button (click)="previousPage()" [disabled]="currentPage === 0"
+            class="btn btn-custom-css btn-pagination">Previous</button>
+          <span class="span-css">Page {{ currentPage + 1 }} of {{ totalPages }}</span>
+          <button (click)="nextPage()" [disabled]="currentPage === totalPages - 1"
+            class="btn btn-custom-css btn-pagination">Next</button>
+        </div>
+
+      </div>
+    </div>
+  </div>
+
+</section>

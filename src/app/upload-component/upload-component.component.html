@@ -1,0 +1,75 @@
+<section class="landing-section-css">
+
+    <!-- section for content -->
+    <div class="container-fluid main-content-container">
+
+        <div class="row">
+            <div class="col-sm-6">
+                <h2 class="title-css">Upload your Document</h2>
+                <h6 class="pb-3">The complete solution to centralise knowledge management.</h6>
+                <p>The KM Lab provides the ability to :</p>
+                <p class="content-line-height">Upload any document to the KM Lab that are not stored in the databse or
+                    SharePoint to ensure a list of
+                    document in the KM Lab. This allows these additional documnets to be aligned with the document
+                    standards
+                    for
+                    different document types.</p>
+
+                <div class="mb-3">
+                    <form>
+                        <label class="title-css-select" for="selectedLLM">Select the LLM</label>
+                        <select class="form-select" [(ngModel)]="selectedLLM" name="selectedLLM" id="selectedLLM">
+                            <option value="GPT-4o-Mini">GPT 4o-Mini</option>
+                            <option value="GPT-3.5-Turbo">GPT 3.5 Turbo</option>
+                        </select>
+
+
+                        <div class="form-check form-switch mb-1">
+                            <input class="form-check-input" type="checkbox" role="switch" id="isDescriptionEnabled"
+                                [(ngModel)]="isDescriptionEnabled" name="isDescriptionEnabled">
+                            <label class="form-check-label title-css-select" for="isDescriptionEnabled">
+                                Advanced Curation Required?
+
+                                <span class="icon-container">
+                                    <i class="bi bi-info-circle" (mouseenter)="toggleTooltip(true)"
+                                        (mouseleave)="toggleTooltip(false)">
+                                    </i>
+                                    <span *ngIf="showTooltip" class="tooltip-text">This option enables advanced curation
+                                        generally meant for documents with images.</span>
+                                </span>
+
+                            </label>
+                        </div>
+
+
+                        <label for="formFile" class="form-label">
+                            <span class="title-css">Upload your files securely, we support PDF, DOC, DOCX formats up to
+                                100MB.</span>
+                        </label>
+                        <div class="d-flex justify-content-between">
+                            <input class="form-control w-58" type="file" id="formFile" #fileInput
+                                (change)="clearError()" required>
+                            <button type="button" class="btn btn-custom-css btn-upload" (click)="uploadFile()"
+                                [disabled]="isUploading">
+                                <span *ngIf="isUploading" class="spinner-border spinner-border-sm text-info margin-right-spinner"
+                                    role="status" aria-hidden="true"></span>
+                                <span>Upload Document</span>
+                            </button>
+                        </div>
+
+                        <!-- Error Message -->
+                        <span *ngIf="errorMessage" class="text-danger message-css">{{ errorMessage }}</span>
+
+                    </form>
+                </div>
+
+            </div>
+
+            <div class="col-sm-6">
+                <img class="img-css" src="assets/images/upload_img.png" alt="upload-img">
+            </div>
+        </div>
+
+    </div>
+
+</section>

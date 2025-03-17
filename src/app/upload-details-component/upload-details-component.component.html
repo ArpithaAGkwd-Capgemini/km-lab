@@ -1,0 +1,492 @@
+<section class="landing-section-css">
+
+    <!-- section for pdf details content -->
+    <div class="details-container" *ngIf="detailsView">
+
+        <div class="col-sm-2 details-menu">
+            <div class="details-menu-title">
+                <p class="heading-css">Section Navigation</p>
+            </div>
+
+            <div>
+                <div class="accordion" id="accordionPanelsStayOpenExample">
+                    <div class="accordion" id="accordionExample">
+                        <div class="accordion-item" *ngFor="let item of accordionItems; let i = index">
+                            <!-- Only show the button if subItems exist -->
+                            <h2 class="accordion-header" *ngIf="item.subItems.length > 0">
+                                <button class="accordion-button" type="button" data-bs-toggle="collapse"
+                                    [attr.data-bs-target]="'#' + item.id" [attr.aria-expanded]="item.isOpen"
+                                    [attr.aria-controls]="item.id">
+                                    {{ item.title }}
+                                </button>
+                            </h2>
+                            <div *ngIf="item.subItems.length > 0" [id]="item.id" class="accordion-collapse collapse"
+                                [ngClass]="{ 'show': item.isOpen }">
+                                <div class="accordion-body">
+                                    <p *ngFor="let subItem of item.subItems">{{ subItem }}</p>
+                                </div>
+                            </div>
+                            <!-- If no subItems, just display the title as plain text -->
+                            <h2 class="accordion-header header-nav-custom-css" *ngIf="item.subItems.length === 0">
+                                <span class="py-2">{{ item.title }}</span>
+                            </h2>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-sm-6 details-content">
+            <div class="tabs-container">
+                <ul class="nav nav-tabs">
+                    <li class="nav-item">
+                        <a class="nav-link" [class.active]="curated" (click)="switchSectionCurated()">Curated Review</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" [class.active]="!curated" (click)="switchSectionOriginal()">Original
+                            Preview</a>
+                    </li>
+                </ul>
+                <button class="btn btn-custom-css edit-btn" *ngIf="curated" (click)="editToggle()">Edit</button>
+            </div>
+
+
+            <section class="data-section">
+                <!-- div foe curated content -->
+                <div class="section-css" [hidden]="!curated">
+                    <input type="text" id="curatedSectionTitle" name="curatedSectionTitle" class="form-control"
+                        [disabled]="editFlag" placeholder="Title goes here"
+                        [(ngModel)]="(curatedSections[currentSection] || { Title: '' }).Title">
+                    <br>
+                    <textarea class="form-control" name="curated-textarea" [disabled]="editFlag"
+                        placeholder="No Content to display." id="curated-textarea" rows="3"
+                        [(ngModel)]="(curatedSections[currentSection] || { Content: '' }).Content">
+                    </textarea>
+                </div>
+
+                <!-- div for original content -->
+                <div class="section-css" [hidden]="curated">
+
+                    <div id="documentContainerOriginal" #documentContainerOriginal
+                        style="border: 1px solid #000; padding: 10px; margin-top: 20px;">
+                        <!-- Document will be displayed here -->
+                    </div>
+                    {{errorMessage}}
+                </div>
+
+            </section>
+
+            <section class="button-wrapper" *ngIf="curated">
+                <div class="button-container">
+                    <button class="btn btn-custom-css btn-details" (click)="prevSection()"
+                        [disabled]="currentSectionIndex === 0">Previous</button>
+                    <p>Section {{ currentSectionIndex + 1 }} of {{ sectionKeys.length }}</p>
+                    <button class="btn btn-custom-css btn-details" (click)="nextSection()"
+                        [disabled]="currentSectionIndex === sectionKeys.length - 1">Next</button>
+                </div>
+                <button class="btn btn-custom-css btn-details w-43" (click)="submitData()" [disabled]="isSubmitting">
+                    <span *ngIf="isSubmitting" class="spinner-border spinner-border-sm text-info margin-right-spinner"
+                        role="status" aria-hidden="true"></span>
+                    Submit & View Updated Version
+                </button>
+
+            </section>
+
+
+        </div>
+
+        <div class="col-sm-3 details-selection">
+            <div class="accordion" id="curatedRightMenu">
+
+                <!-- Section Metadata -->
+                <div class="accordion-item">
+                    <h2 class="accordion-header">
+                        <button class="accordion-button" type="button" data-bs-toggle="collapse"
+                            data-bs-target="#section-metadata-curated" aria-expanded="true" aria-controls="collapseOne">
+                            Section Metadata
+                        </button>
+                    </h2>
+                    <div id="section-metadata-curated" class="accordion-collapse collapse show"
+                        data-bs-parent="#curatedRightMenu">
+                        <div class="tabs-container margin-top">
+                            <ul class="nav nav-tabs">
+                                <li class="nav-item">
+                                    <a class="nav-link" [class.active]="intentFlag"
+                                        (click)="switchIntentTab()">Intent</a>
+                                </li>
+                                <li class="nav-item">
+                                    <a class="nav-link" [class.active]="!intentFlag"
+                                        (click)="switchClassificationTab()">Classification & Accessibility</a>
+                                </li>
+                            </ul>
+                        </div>
+
+                        <!-- Intent Section -->
+                        <div id="intent" class="margin-top" *ngIf="intentFlag">
+                            <div class="form-floating mb-3"
+                                *ngIf="curatedSections && curatedSections[currentSection] && curatedSections[currentSection].Metadata">
+                                <input type="text" class="form-control" id="intent1" name="intent1"
+                                    [(ngModel)]="curatedSections[currentSection].Metadata.IntentL1"
+                                    [disabled]="editFlag">
+                                <label for="intent1">Intent L1</label>
+                            </div>
+
+                            <div class="form-floating mb-3"
+                                *ngIf="curatedSections && curatedSections[currentSection] && curatedSections[currentSection].Metadata">
+                                <input type="text" class="form-control" id="intent2" name="intent2"
+                                    [(ngModel)]="curatedSections[currentSection].Metadata.IntentL2"
+                                    [disabled]="editFlag">
+                                <label for="intent2">Intent L2</label>
+                            </div>
+
+                            <div class="form-floating mb-3"
+                                *ngIf="curatedSections && curatedSections[currentSection] && curatedSections[currentSection].Metadata">
+                                <input type="text" class="form-control" id="intent3" name="intent3"
+                                    [(ngModel)]="curatedSections[currentSection].Metadata.IntentL3"
+                                    [disabled]="editFlag">
+                                <label for="intent3">Intent L3</label>
+                            </div>
+                        </div>
+
+                        <!-- Classification & Accessibility -->
+                        <div id="classification" class="margin-top" *ngIf="!intentFlag">
+                            <div class="form-floating mb-3">
+                                <input type="text" class="form-control" id="tag" name="tag"
+                                    [(ngModel)]="curatedSections[currentSection].Metadata.Tags" [disabled]="editFlag">
+                                <label for="tag">Tag</label>
+                            </div>
+
+                            <div class="form-floating mb-3">
+                                <input type="text" class="form-control" id="labels" name="labels"
+                                    [(ngModel)]="curatedSections[currentSection].Metadata.Labels" [disabled]="editFlag">
+                                <label for="labels">Labels</label>
+                            </div>
+
+                            <div class="form-floating mb-3">
+                                <input type="text" class="form-control" id="language" name="language"
+                                    [(ngModel)]="curatedSections[currentSection].Metadata.Language"
+                                    [disabled]="editFlag">
+                                <label for="language">Language</label>
+                            </div>
+
+                            <div class="form-floating mb-3">
+                                <input type="text" class="form-control" id="compliance" name="compliance"
+                                    [(ngModel)]="curatedSections[currentSection].Metadata.ComplianceLegalNotes"
+                                    [disabled]="editFlag">
+                                <label for="compliance">Compliance / Legal Notes</label>
+                            </div>
+
+                            <div class="form-floating mb-3">
+                                <input type="text" class="form-control" id="RegionApplicability"
+                                    name="RegionApplicability"
+                                    [(ngModel)]="curatedSections[currentSection].Metadata.RegionApplicability"
+                                    [disabled]="editFlag">
+                                <label for="compliance">Region Applicability</label>
+                            </div>
+
+                            <div class="form-floating mb-3">
+                                <input type="text" class="form-control" id="accessControl" name="accessControl"
+                                    [(ngModel)]="curatedSections[currentSection].Metadata.AccessControlPermissions"
+                                    [disabled]="editFlag">
+                                <label for="accessControl">Access Control / Permissions</label>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Document Checks -->
+                <div class="accordion-item">
+                    <h2 class="accordion-header">
+                        <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse"
+                            data-bs-target="#document-check" aria-expanded="false" aria-controls="collapseTwo">
+                            Document Check
+                        </button>
+                    </h2>
+                    <div id="document-check" class="accordion-collapse collapse" data-bs-parent="#curatedRightMenu">
+                        <div class="accordion-body margin-bottom">
+
+                            <!-- Spell Check -->
+                            <div class="accordion-item">
+                                <h2 class="accordion-header">
+                                    <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse"
+                                        data-bs-target="#spell-check" aria-expanded="false" aria-controls="collapseTwo">
+                                        Spell Check
+                                    </button>
+                                </h2>
+                                <div id="spell-check" class="accordion-collapse collapse"
+                                    data-bs-parent="#document-check">
+                                    <div class="accordion-body margin-bottom">
+                                        <!-- Ensure that curatedSections[currentSection] and Checks exist before rendering -->
+                                        <div
+                                            *ngIf="curatedSections[currentSection] && curatedSections[currentSection].Checks">
+                                            <div class="d-flex gap-4 flex-wrap"
+                                                *ngIf="getKeys(curatedSections[currentSection].Checks.SpellChecks || {}).length > 0; else noSpellIssues">
+                                                <div class="w-100"
+                                                    *ngFor="let word of getKeys(curatedSections[currentSection].Checks.SpellChecks || {})">
+                                                    <p class="spell-title">❌ {{ word }}</p>
+                                                    <div class="mb-3">
+                                                        <input type="text" class="form-control h-2"
+                                                            [id]="curatedSections[currentSection].Checks.SpellChecks[word]"
+                                                            [name]="curatedSections[currentSection].Checks.SpellChecks[word]"
+                                                            [(ngModel)]="
+                                                            curatedSections[currentSection].Checks.SpellChecks[word]">
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+
+                                        <ng-template #noSpellIssues>
+                                            <p class="no-error">✅ No spelling issues found.</p>
+                                        </ng-template>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- Grammar Check -->
+                            <div class="accordion-item">
+                                <h2 class="accordion-header">
+                                    <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse"
+                                        data-bs-target="#grammar-check" aria-expanded="false"
+                                        aria-controls="collapseTwo">
+                                        Grammar Check
+                                    </button>
+                                </h2>
+                                <div id="grammar-check" class="accordion-collapse collapse"
+                                    data-bs-parent="#document-check">
+                                    <div class="accordion-body margin-bottom">
+                                        <!-- Ensure data exists before rendering -->
+                                        <div
+                                            *ngIf="curatedSections[currentSection] && curatedSections[currentSection].Checks">
+                                            <div class="w-100"
+                                                *ngIf="getKeys(curatedSections[currentSection].Checks.GrammarChecks || {}).length > 0; else noGrammarIssues">
+                                                <div
+                                                    *ngFor="let sentence of getKeys(curatedSections[currentSection].Checks.GrammarChecks || {})">
+                                                    <p class="grammar-title">❌ {{ sentence }}</p>
+                                                    <div class="mb-3">
+                                                        <textarea class="form-control small-text"
+                                                            [id]="curatedSections[currentSection].Checks.GrammarChecks[sentence]"
+                                                            [name]="curatedSections[currentSection].Checks.GrammarChecks[sentence]"
+                                                            [(ngModel)]="curatedSections[currentSection].Checks.GrammarChecks[sentence]">
+                            </textarea>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+
+                                        <ng-template #noGrammarIssues>
+                                            <p class="no-error">✅ No grammar issues found.</p>
+                                        </ng-template>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- Acronym Check -->
+                            <div class="accordion-item">
+                                <h2 class="accordion-header">
+                                    <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse"
+                                        data-bs-target="#acronym-check" aria-expanded="false"
+                                        aria-controls="collapseTwo">
+                                        Acronym Check
+                                    </button>
+                                </h2>
+                                <div id="acronym-check" class="accordion-collapse collapse"
+                                    data-bs-parent="#document-check">
+                                    <div class="accordion-body margin-bottom">
+                                        <!-- Ensure data exists before rendering -->
+                                        <div
+                                            *ngIf="curatedSections[currentSection] && curatedSections[currentSection].Checks">
+                                            <div
+                                                *ngIf="getKeys(curatedSections[currentSection].Checks.AcronymChecks || {}).length > 0; else noAcronymIssues">
+                                                <div
+                                                    *ngFor="let acronym of getKeys(curatedSections[currentSection].Checks.AcronymChecks || {})">
+                                                    <p class="grammar-title">❌ {{ acronym }}</p>
+                                                    <div class="mb-3">
+                                                        <textarea class="form-control small-text"
+                                                            [id]="curatedSections[currentSection].Checks.AcronymChecks[acronym]"
+                                                            [name]="curatedSections[currentSection].Checks.AcronymChecks[acronym]"
+                                                            [(ngModel)]="curatedSections[currentSection].Checks.AcronymChecks[acronym]">
+                                                        </textarea>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+
+                                        <ng-template #noAcronymIssues>
+                                            <p class="no-error">✅ No acronym suggestions found.</p>
+                                        </ng-template>
+                                    </div>
+                                </div>
+                            </div>
+
+
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+    </div>
+
+
+    <!-- section for final review content -->
+    <div class="final-details-container" *ngIf="!detailsView">
+
+        <div class="row">
+            <div class="col-sm-8 review-container">
+                <h4 class="title-css">Final Review</h4>
+
+                <div id="textarea-review">
+
+                    <textarea class="form-control" placeholder="final review text-area" id="final-review-textarea"
+                        rows="3" [(ngModel)]="finalReviewContent"></textarea>
+                </div>
+
+                <div class="final-btn-container">
+                    <button class="btn btn-custom-css btn-details review-btns"
+                        (click)="toggleCuratedFinalReviewScreen()">Go To Curated
+                        / Original Screen</button>
+
+                    <div class="btn-inner-wrapper">
+                        <!-- Upload to Knowledge Database Button -->
+                        <button class="btn btn-custom-css btn-details review-btns" (click)="uploadToKnowledgeDatabase()"
+                            [disabled]="isUploading">
+                            <span *ngIf="isUploading"
+                                class="spinner-border spinner-border-sm text-info margin-right-spinner" role="status"
+                                aria-hidden="true"></span>
+                            Upload To Knowledge Database
+                        </button>
+
+                        <!-- Generate URL Button -->
+                        <button class="btn btn-custom-css btn-details review-btns" (click)="downloadDocument()"
+                            [disabled]="isDownloading">
+                            <span *ngIf="isDownloading"
+                                class="spinner-border spinner-border-sm text-info margin-right-spinner" role="status"
+                                aria-hidden="true"></span>
+                            Generate URL for downloading PDF
+                        </button>
+
+                    </div>
+                </div>
+
+                <div class="mt-4 d-flex justify-content-end">
+                    <a class="download-link-css" [href]="hrefURL" target="_blank" *ngIf="hrefURL">Link for the PDF
+                        generated</a>
+                </div>
+
+                <div id="success-msg" *ngIf="successFlag">
+                    <p><b>Uploaded to knowledge database successfully !</b></p>
+                </div>
+
+            </div>
+
+            <div class="col-sm-3 final-review-sidebar">
+                <div class="accordion" id="curatedRightMenu">
+                    <div class="accordion-item">
+                        <h2 class="accordion-header">
+                            <button class="accordion-button" type="button" data-bs-toggle="collapse"
+                                data-bs-target="#section-metadata-curated" aria-expanded="true"
+                                aria-controls="collapseOne">
+                                Document Metadata
+                            </button>
+                        </h2>
+                        <div id="section-metadata-curated" class="accordion-collapse collapse show"
+                            data-bs-parent="#finalReviewSideBar">
+                            <div class="tabs-container margin-top">
+                                <ul class="nav nav-tabs">
+                                    <li class="nav-item">
+                                        <a class="nav-link font-size-tabs" [class.active]="lifecycleViewFlag"
+                                            (click)="switchLifecycleTab()">Lifecycle & Management</a>
+                                    </li>
+                                    <li class="nav-item">
+                                        <a class="nav-link font-size-tabs" [class.active]="!lifecycleViewFlag"
+                                            (click)="switchIdentificationTab()">Content & Identification</a>
+                                    </li>
+                                </ul>
+                            </div>
+
+                            <div id="lifecycle-content" class="margin-top p-3" *ngIf="lifecycleViewFlag">
+                                <div class="form-floating mb-3">
+                                    <input type="text" class="form-control" id="publicationDate" name="publicationDate"
+                                        [(ngModel)]="documentMetadata.PublicationDate" [disabled]="editFlagFinalReview">
+                                    <label for="publicationDate">Publication Date</label>
+                                </div>
+
+                                <div class="form-floating mb-3">
+                                    <input type="text" class="form-control" id="revisionDate" name="revisionDate"
+                                        [(ngModel)]="documentMetadata.RevisionDate" [disabled]="editFlagFinalReview">
+                                    <label for="revisionDate">Revision Date</label>
+                                </div>
+
+                                <div class="form-floating mb-3">
+                                    <input type="text" class="form-control" id="reviewCycle" name="reviewCycle"
+                                        [(ngModel)]="documentMetadata.ReviewCycle" [disabled]="editFlagFinalReview">
+                                    <label for="reviewCycle">Review Cycle</label>
+                                </div>
+
+                                <div class="form-floating mb-3">
+                                    <input type="text" class="form-control" id="expirationDate" name="expirationDate"
+                                        [(ngModel)]="documentMetadata.ExpirationDate" [disabled]="editFlagFinalReview">
+                                    <label for="expirationDate">Expiration Date</label>
+                                </div>
+                            </div>
+
+                            <div id="identification-content" class="margin-top p-3" *ngIf="!lifecycleViewFlag">
+                                <div class="form-floating mb-3">
+                                    <input type="text" class="form-control" id="documentTitle" name="DocumentTitle"
+                                        [(ngModel)]="documentMetadata.DocumentTitle" [disabled]="editFlagFinalReview">
+                                    <label for="documentTitle">Document Title</label>
+                                </div>
+
+                                <div class="form-floating mb-3">
+                                    <input type="text" class="form-control" id="company" name="company"
+                                        [(ngModel)]="documentMetadata.Company" [disabled]="editFlagFinalReview">
+                                    <label for="company">Company</label>
+                                </div>
+
+                                <div class="form-floating mb-3">
+                                    <input type="text" class="form-control" id="documentType" name="documentType"
+                                        [(ngModel)]="documentMetadata.DocumentType" [disabled]="editFlagFinalReview">
+                                    <label for="documentType">Document Type</label>
+                                </div>
+
+                                <div class="form-floating mb-3">
+                                    <input type="text" class="form-control" id="documentId" name="documentId"
+                                        [(ngModel)]="documentMetadata.Document_ID" [disabled]="editFlagFinalReview">
+                                    <label for="documentId">Document ID</label>
+                                </div>
+
+                                <div class="form-floating mb-3">
+                                    <input type="text" class="form-control" id="version" name="version"
+                                        [(ngModel)]="documentMetadata.Version" [disabled]="editFlagFinalReview">
+                                    <label for="version">Version</label>
+                                </div>
+
+                                <div class="form-floating mb-3">
+                                    <input type="text" class="form-control" id="copyright" name="Copyright"
+                                        [(ngModel)]="documentMetadata.Copyright" [disabled]="editFlagFinalReview">
+                                    <label for="copyright">Copyright</label>
+                                </div>
+
+                                <div class="form-floating mb-3">
+                                    <input type="text" class="form-control" id="documentAudience"
+                                        name="documentAudience" [(ngModel)]="documentMetadata.Author_or_Owner"
+                                        [disabled]="editFlagFinalReview">
+                                    <label for="documentAudience">Document Audience</label>
+                                </div>
+
+                            </div>
+
+                        </div>
+                    </div>
+                </div>
+
+                <div class="d-flex justify-content-center mt-2">
+                    <button class="btn btn-custom-css btn-details btn-edit" (click)="editFlagFinalReviewToggle()"> Edit
+                    </button>
+                </div>
+            </div>
+        </div>
+
+    </div>
+
+</section>

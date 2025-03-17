@@ -1,0 +1,188 @@
+<section class="landing-section-css">
+
+    <!-- section for content -->
+    <div class="row chatbot-container">
+
+        <div class="col-sm-2 controls-section">
+
+            <p class="pt-4"><b class="title-css additonal-title-css">Compare Document Versions</b></p>
+
+            <div id="select-one">
+                <p><b class="title-css">Selection 1</b></p>
+                <label for="option1Document">Select the document</label>
+                <select class="form-select" id="option1Document" name="option1Document" [(ngModel)]="option1Document">
+                    <option value="Original">Original</option>
+                    <option value="Curated">Curated</option>
+                </select>
+
+                <label>Select the LLM</label>
+                <select class="form-select" id="option1SelectedLLM" name="option1SelectedLLM"
+                    [(ngModel)]="option1SelectedLLM">
+                    <option selected value="GPT-3.5-Turbo">GPT 3.5 Turbo</option>
+                    <option value="GPT-4o-Mini">GPT 4o-Mini</option>
+                </select>
+
+            </div>
+
+            <div id="select-two">
+                <p><b class="title-css">Selection 2</b></p>
+                <label for="option2Document">Select the document</label>
+                <select class="form-select" id="option2Document" name="option2Document" [(ngModel)]="option2Document">
+                    <option selected value="Curated">Curated</option>
+                    <option value="Original">Original</option>
+                </select>
+
+                <label for="option2SelectedLLM">Select the LLM</label>
+                <select class="form-select" id="option2SelectedLLM" name="option2SelectedLLM"
+                    [(ngModel)]="option2SelectedLLM">
+                    <option value="GPT-3.5-Turbo">GPT 3.5 Turbo</option>
+                    <option value="GPT-4o-Mini">GPT 4o-Mini</option>
+                </select>
+
+            </div>
+        </div>
+
+
+        <div class="col-sm-9 chatbot-query-section">
+            <div class="chat-section">
+
+                <section [ngStyle]="{'visibility': chatAsked ? 'visible' : 'hidden'}">
+                    <div class="row format">
+                        <div class="col-sm-6 chat-container"
+                            [ngClass]="collapseFlag ? 'chat-container-height-collapse' : 'chat-container-height-expand'">
+                            <p><b class="title-css">Selection 1</b></p>
+
+                            <div id="selection-1-container" class="mb-2"
+                                [ngClass]="collapseFlag ? 'container-height-expand' : 'container-height-collapse'">
+
+                                <div class="d-flex gap-2 align-items-center mb-1" *ngIf="processingQueryFlag">
+                                    <div class="spinner-border spinner-border-sm text-info" role="status">
+                                        <span class="visually-hidden">Loading...</span>
+                                    </div>
+                                    <span>Processing your query</span>
+                                </div>
+
+                            </div>
+                        </div>
+
+                        <div class="col-sm-6 chat-container">
+                            <p><b class="title-css">Selection 2</b></p>
+
+                            <div id="selection-2-container" class="mb-2"
+                                [ngClass]="collapseFlag ? 'container-height-expand' : 'container-height-collapse'">
+
+                                <div class="d-flex gap-2 align-items-center mb-1" *ngIf="processingQueryFlag">
+                                    <div class="spinner-border spinner-border-sm text-info" role="status">
+                                        <span class="visually-hidden">Loading...</span>
+                                    </div>
+                                    <span>Processing your query</span>
+                                </div>
+
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="accordion accordian-custom" id="accordionExample">
+                        <div class="accordion-item">
+                            <h2 class="accordion-header">
+                                <button class="accordion-button title-css m-0 p-2" type="button"
+                                    data-bs-toggle="collapse" data-bs-target="#collapseOne" aria-expanded="true"
+                                    aria-controls="collapseOne" (click)="toggleCollapseFlag()">
+                                    Submit Feedback
+                                </button>
+                            </h2>
+                            <div id="collapseOne" class="accordion-collapse collapse show"
+                                data-bs-parent="#accordionExample">
+                                <div class="accordion-body">
+                                    <div class="row format">
+                                        <div class="submit-feedback-container">
+                                            <!-- <p class="mt-3"><b class="title-css">Submit Feedback</b></p> -->
+                                            <form>
+                                                <div class="row">
+                                                    <div class="col-sm-12">
+                                                        <p class="m-0 p-0">Kindly provide a rating</p>
+                                                        <div class="letter">
+                                                            <i *ngFor="let star of stars; let i = index" class="bi"
+                                                                [ngClass]="{
+                                                                'bi-star-fill': i < rating,
+                                                                'bi-star': i >= rating
+                                                              }" (click)="rate(i + 1)"
+                                                                (mouseenter)="hoverRating = i + 1"
+                                                                (mouseleave)="hoverRating = 0"></i>
+                                                        </div>
+
+                                                    </div>
+                                                </div>
+
+                                                <div class="row">
+                                                    <div class="col-sm-4">
+                                                        <label for="isSourceCorrect">Is the source correct ?</label>
+                                                        <select class="form-select" id="isSourceCorrect"
+                                                            name="isSourceCorrect" [(ngModel)]="isSourceCorrect">
+                                                            <option value="Yes">Yes</option>
+                                                            <option value="No">No</option>
+                                                        </select>
+                                                    </div>
+
+                                                    <div class="col-sm-4">
+                                                        <label for="isAnswerAccurate">Is the answer accurate ?</label>
+                                                        <select class="form-select" id="isAnswerAccurate"
+                                                            name="isAnswerAccurate" [(ngModel)]="isAnswerAccurate">
+                                                            <option value="Yes">Yes</option>
+                                                            <option value="No">No</option>
+                                                        </select>
+                                                    </div>
+
+                                                    <div class="col-sm-4">
+                                                        <div class="form-floating mb-3">
+                                                            <input type="text" class="form-control input-height"
+                                                                id="feedbackComment" name="feedbackComment"
+                                                                [(ngModel)]="feedbackComment">
+                                                            <label for="feedbackComment">Write your
+                                                                opinion...</label>
+                                                        </div>
+                                                    </div>
+                                                </div>
+
+                                                <div class="row">
+                                                    <button type="button" class="btn btn-custom-css btn-feedback"
+                                                        (click)="submitChatFeedback()">Submit
+                                                        Feedback</button>
+                                                </div>
+                                            </form>
+                                        </div>
+                                    </div>
+
+                                </div>
+                            </div>
+                        </div>
+
+                    </div>
+
+                </section>
+
+            </div>
+
+            <div class="query-section">
+                <div class="input-group">
+                    <input type="text" class="form-control css-input-custom" aria-label="query-input-box"
+                        placeholder="Type your query here..." id="userQueryInput" name="userQueryInput"
+                        [(ngModel)]="userQueryInput" (keyup.enter)="chatQuery()">
+                    <span class="input-group-text flag-button"><i class="bi bi-send-fill"
+                            (click)="chatQuery()"></i></span>
+                </div>
+                <button type="button" class="btn btn-custom-css btn-chat" (click)="clearChat()">Clear Chat</button>
+            </div>
+        </div>
+
+        <div id="success-msg" *ngIf="successFlag">
+            <p><b>Feedback submitted successfully !</b></p>
+        </div>
+
+        <div id="error-msg" *ngIf="errorFlag">
+            <p><b>{{errorMsg}}</b></p>
+        </div>
+
+    </div>
+
+</section>

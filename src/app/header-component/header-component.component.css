@@ -1,0 +1,42 @@
+.navbar {
+    background-color: white;
+}
+
+.title-css-main {
+    letter-spacing: 2px;
+    color: #7F7F7F;
+    font-weight: 700;
+}
+
+.active {
+    color: #0070AD !important;
+    font-weight: 800;
+}
+
+.nav-link:hover {
+    color: #12ABDB !important;
+}
+
+.container-fluid {
+    width: 50% !important;
+    margin-left: 1.2rem;
+}
+
+.profile-container {
+    width: 50%;
+    display: flex;
+    justify-content: flex-end;
+    padding: right;
+    padding-right: 2rem;
+    align-items: anchor-center;
+}
+
+
+i {
+    font-size: 24px;
+}
+
+.img-css {
+    height: 1.5rem !important;
+    width: 1.5rem !important;
+}

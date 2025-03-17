@@ -1,0 +1,44 @@
+.content-line-height {
+    line-height: 1.8rem;
+}
+
+.btn-upload {
+    width: 40%;
+}
+
+.message-css {
+    font-weight: 700;
+    font-size: 13px;
+}
+
+.form-select {
+    width: 30%;
+    margin-bottom: 1rem;
+}
+
+.title-css-select {
+    margin-bottom: 9px;
+    color: #0070AD;
+}
+
+i {
+    color: red;
+    font-weight: 800;
+    margin-right: 10px;
+}
+
+.icon-container {
+    font-size: 15px;
+    font-weight: 900;
+    margin-left: 10px;
+}
+
+.tooltip-text {
+    color: red;
+    font-size: 11px;
+    font-weight: 500;
+}
+
+.w-58 {
+    width: 58%;
+}
